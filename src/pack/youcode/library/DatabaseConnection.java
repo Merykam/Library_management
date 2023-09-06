@@ -17,7 +17,7 @@ public class DatabaseConnection {
 
 
             // Establish a connection to the database
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library", "root", "");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/saslibrary", "root", "");
 
             return con;
         } catch (ClassNotFoundException | SQLException e) {

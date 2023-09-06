@@ -10,16 +10,16 @@ public class bookImplementation implements bookInterface {
     public void addBook(Book book) {
 
          con=DatabaseConnection.createDBConnection();
-        String query = "INSERT INTO authors (title, quantity, disponible, isbn, author_id) VALUES (?,?,?,?,?)";
+        String query = "INSERT INTO books (title, quantity, disponible, isbn, author) VALUES (?,?,?,?,?)";
 
         try{
 
             PreparedStatement pstm = con.prepareStatement(query);
             pstm.setString(1,book.getTitle());
-            pstm.setInt(1,book.getQuantity());
-            pstm.setInt(1,book.getAvailable());
-            pstm.setString(1,book.getIsbn());
-            pstm.setObject(1,book.getAuthor());
+            pstm.setInt(2,book.getQuantity());
+            pstm.setInt(3,book.getAvailable());
+            pstm.setString(4,book.getIsbn());
+            pstm.setString(5,book.getAuthor());
             int count = pstm.executeUpdate();
             if(count !=0){
                 System.out.println("book inserted successfully");

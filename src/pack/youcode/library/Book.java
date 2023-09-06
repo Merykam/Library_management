@@ -7,9 +7,11 @@ public class Book {
     private int available;
     private String isbn;
 
-    private Author author;
+    private String author;
 
-    public Book(String title, int quantity, int available, String isbn, Author author) {
+
+
+    public Book(String title, int quantity, int available, String isbn, String author) {
 
         this.title = title;
         this.quantity = quantity;
@@ -59,11 +61,12 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Author getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setAuthor(String author) {
+
         this.author = author;
     }
 }

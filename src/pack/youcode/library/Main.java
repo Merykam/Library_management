@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         //bookInterface bookObject = new bookImplementation();
 
-        authorInterface authorObject = new authorImplimentation();
+        //authorInterface authorObject = new authorImplimentation();
 
         bookInterface bookObject = new bookImplementation();
 
@@ -22,7 +22,7 @@ public class Main {
            Scanner sc = new Scanner(System.in);
             System.out.printf("Welcome to Library management application\n");
             do{
-                System.out.println("0.Add author\n" +
+                System.out.println(
                         "1.Add book\n" +
                         "1.Show all books\n" +
                         "3.Update book\n" +
@@ -32,21 +32,21 @@ public class Main {
                 int choice=sc.nextInt();
 
                 switch (choice){
-                    case 0:
+                   // case 0:
                         //Book book = new Book();
 
                         //get author name from the user
-                        System.out.println("Enter author name : ");
-                        String author=sc.next();
+                        //System.out.println("Enter author name : ");
+                        //String author=sc.next();
 
                         //create object from Author class
-                        Author author1 = new Author(author);
+                       // Author author1 = new Author(author);
 
                         //set name to object
                         //author1.setName(author);
 
                         //arg
-                        authorObject.addAuthor(author1);
+                        //authorObject.addAuthor(author1);
 
 
 
@@ -60,7 +60,7 @@ public class Main {
 
 
 
-                        break;
+                       // break;
 
                     case 1:
                         //Book book = new Book();
@@ -75,15 +75,16 @@ public class Main {
                         System.out.println("Enter ISBN : ");
                         String isbn=sc.next();
 
-                        System.out.println("select author :  " + authorObject.showAuthor());
-                        //String isbn=sc.next();
+
+                        //authorObject.showAuthor();
+                        System.out.println("Enter author name: ");
+                        String authorname=sc.next();
 
 
-                        //create object from Author class
-                        Book book1 = new Book(title,quantity,quantity,isbn);
+                        //create object from book class
+                        Book book1 = new Book(title,quantity,quantity,isbn,authorname);
 
-                        //set name to object
-                        //author1.setName(author);
+
 
                         //arg
                         bookObject.addBook(book1);
