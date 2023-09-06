@@ -24,7 +24,7 @@ public class Main {
             do{
                 System.out.println(
                         "1.Add book\n" +
-                        "1.Show all books\n" +
+                        "2.Show all books\n" +
                         "3.Update book\n" +
                         "4.Delete book");
                 System.out.println("Enter choice : ");
@@ -102,6 +102,9 @@ public class Main {
 
 
                         break;
+
+                    case 2 :
+                        bookObject.showBooks();
                     case 6:
                         System.out.println("Thank youu for using my app");
                         System.exit(0);
