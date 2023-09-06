@@ -10,56 +10,112 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        //bookInterface bookObject = new bookImplementation();
+
+        authorInterface authorObject = new authorImplimentation();
+
+        bookInterface bookObject = new bookImplementation();
+
         Connection con = DatabaseConnection.createDBConnection();
         if(con != null){
             //System.out.printf("connection reussite");
+           Scanner sc = new Scanner(System.in);
+            System.out.printf("Welcome to Library management application\n");
+            do{
+                System.out.println("0.Add author\n" +
+                        "1.Add book\n" +
+                        "1.Show all books\n" +
+                        "3.Update book\n" +
+                        "4.Delete book");
+                System.out.println("Enter choice : ");
+
+                int choice=sc.nextInt();
+
+                switch (choice){
+                    case 0:
+                        //Book book = new Book();
+
+                        //get author name from the user
+                        System.out.println("Enter author name : ");
+                        String author=sc.next();
+
+                        //create object from Author class
+                        Author author1 = new Author(author);
+
+                        //set name to object
+                        //author1.setName(author);
+
+                        //arg
+                        authorObject.addAuthor(author1);
 
 
 
-            // Créer un scanner pour lire les entrées de l'utilisateur
-            Scanner scanner = new Scanner(System.in);
-
-            int choix;
-            do {
-                System.out.println("Menu :");
-                System.out.println("1 - Ajouter un livre");
-                System.out.println("2 - Afficher les livres");
-                System.out.println("3 - Mettre à jour un livre");
-                System.out.println("4 - Supprimer un livre");
-                System.out.println("0 - Quitter");
-                System.out.print("Choisissez une option : ");
-
-                choix = scanner.nextInt();
 
 
-                switch (choix) {
+
+
+
+
+
+
+
+
+                        break;
+
                     case 1:
-                        scanner.nextLine(); // Nettoyer la ligne restante
-                        System.out.print("Titre du livre : ");
-                        String titre = scanner.nextLine();
-                        System.out.print("Quantité : ");
-                        int quantite = scanner.nextInt();
-                        System.out.print("Disponible : ");
-                        int disponible = scanner.nextInt();
-                        scanner.nextLine(); // Nettoyer la ligne restante
-                        System.out.print("ISBN : ");
-                        String isbn = scanner.nextLine();
-                        System.out.print("ID de l'auteur : ");
-                        int auteurId = scanner.nextInt();
-                    case 2:
+                        //Book book = new Book();
 
-                        System.out.println("i showed books");
+                        //get book name from the user
+                        System.out.println("Enter book title : ");
+                        String title=sc.next();
+
+                        System.out.println("Enter quantity : ");
+                        int quantity=sc.nextInt();
+
+                        System.out.println("Enter ISBN : ");
+                        String isbn=sc.next();
+
+                        System.out.println("select author :  " + authorObject.showAuthor());
+                        //String isbn=sc.next();
+
+
+                        //create object from Author class
+                        Book book1 = new Book(title,quantity,quantity,isbn);
+
+                        //set name to object
+                        //author1.setName(author);
+
+                        //arg
+                        bookObject.addBook(book1);
+
+
+
+
+
+
+
+
+
+
+
+
+
                         break;
-                    case 3:
-                        System.out.println("i updated books");
-                        break;
+                    case 6:
+                        System.out.println("Thank youu for using my app");
+                        System.exit(0);
 
                     default:
-                        System.out.println("next tiime babe");
+                        System.out.println("Enter valid choice");
+                        break;
                 }
 
 
-            } while (choix != 0);
+
+            }while (true);
+
+
+
         }else
             System.out.printf("nooon reussite");
     }
