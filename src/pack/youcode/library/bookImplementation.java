@@ -61,8 +61,36 @@ public class bookImplementation implements bookInterface {
 
 
 
+
     @Override
-    public void updateBook() {
+    public void updateBook(int bookId, String newTitle, int newQuantity, int newAvailable, String newIsbn, String newAuthor) {
+
+        con = DatabaseConnection.createDBConnection();
+        String query = "UPDATE books SET title=?, quantity=?, disponible=?, isbn=?, author=? WHERE id=?";
+
+        try {
+            PreparedStatement pstm = con.prepareStatement(query);
+            pstm.setString(1, newTitle);
+            pstm.setInt(2, newQuantity);
+            pstm.setInt(3, newAvailable);
+            pstm.setString(4, newIsbn);
+            pstm.setString(5, newAuthor);
+            pstm.setInt(6, bookId); // Spécifiez l'ID du livre que vous souhaitez mettre à jour
+
+            int count = pstm.executeUpdate();
+            if (count != 0) {
+                System.out.println("Livre mis à jour avec succès");
+            } else {
+                System.out.println("Échec de la mise à jour du livre. Le livre avec l'ID " + bookId + " n'a pas été trouvé.");
+            }
+
+            // Assurez-vous de fermer le PreparedStatement et la connexion lorsque vous avez terminé.
+            pstm.close();
+            con.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
 

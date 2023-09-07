@@ -105,6 +105,29 @@ public class Main {
 
                     case 2 :
                         bookObject.showBooks();
+                        break;
+                    case 3 :
+                        System.out.println("Enter id to update book : ");
+                        int bookid= sc.nextInt();
+
+                        System.out.println("Enter new book title : ");
+                        String Newtitle=sc.next();
+
+                        System.out.println("Enter new quantity : ");
+                        int Newquantity=sc.nextInt();
+
+                        System.out.println("Enter new ISBN : ");
+                        String Newisbn=sc.next();
+
+
+                        //authorObject.showAuthor();
+                        System.out.println("Enter new author name: ");
+                        String Newauthorname=sc.next();
+
+
+                        bookObject.updateBook(bookid,Newtitle,Newquantity,Newquantity,Newisbn,Newauthorname);
+
+                        break;
                     case 6:
                         System.out.println("Thank youu for using my app");
                         System.exit(0);
