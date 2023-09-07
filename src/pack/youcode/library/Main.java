@@ -128,6 +128,10 @@ public class Main {
                         bookObject.updateBook(bookid,Newtitle,Newquantity,Newquantity,Newisbn,Newauthorname);
 
                         break;
+                    case 4:
+                        System.out.println("Enter the id to delete book :");
+                        int deletid= sc.nextInt();
+                        bookObject.deleteBook(deletid);
                     case 6:
                         System.out.println("Thank youu for using my app");
                         System.exit(0);

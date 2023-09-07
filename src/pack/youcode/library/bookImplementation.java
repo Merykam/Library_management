@@ -95,7 +95,22 @@ public class bookImplementation implements bookInterface {
     }
 
     @Override
-    public void deleteBook() {
+    public void deleteBook(int id) {
+        con = DatabaseConnection.createDBConnection();
+        String query = "delete from books where id=?";
+        try{
+            PreparedStatement pstm = con.prepareStatement(query);
+            pstm.setInt(1,id);
+
+            int count = pstm.executeUpdate();
+            if(count != 0){
+                System.out.println("book deleted successfully");
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+
+        }
 
     }
 }
