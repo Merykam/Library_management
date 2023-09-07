@@ -6,4 +6,6 @@ public interface bookInterface {
     public void showBooks();
     public void updateBook(int bookId, String newTitle, int newQuantity, int newAvailable, String newIsbn, String newAuthor);
     public void deleteBook(int id);
+
+    public void searchBook(String searchBy);
 }

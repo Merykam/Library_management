@@ -8,6 +8,8 @@ import java.sql.Statement;
 public class bookImplementation implements bookInterface {
 
     Connection con;
+
+
     @Override
     public void addBook(Book book) {
 
@@ -113,4 +115,31 @@ public class bookImplementation implements bookInterface {
         }
 
     }
+
+
+    public void searchBook(String searchBy) {
+        con = DatabaseConnection.createDBConnection();
+        String query = "SELECT * FROM books WHERE author LIKE ? OR title LIKE ?";
+
+        try {
+            PreparedStatement pstm = con.prepareStatement(query);
+            pstm.setString(1, "%" + searchBy + "%");
+            pstm.setString(2, "%" + searchBy + "%");
+
+            ResultSet result = pstm.executeQuery(); // Execute the prepared statement
+
+            while (result.next()) {
+                System.out.format("%s %d %d %s %s%n", result.getString("title"), result.getInt("quantity"), result.getInt("disponible"), result.getString("isbn"), result.getString("author"));
+            }
+
+            // Assurez-vous de fermer le ResultSet, le PreparedStatement et la connexion lorsque vous avez terminé.
+            result.close();
+            pstm.close();
+            con.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Main {
     public static void main(String[] args) {
         //bookInterface bookObject = new bookImplementation();
@@ -26,7 +27,8 @@ public class Main {
                         "1.Add book\n" +
                         "2.Show all books\n" +
                         "3.Update book\n" +
-                        "4.Delete book");
+                        "4.Delete book\n"+
+                        "5.Search book");
                 System.out.println("Enter choice : ");
 
                 int choice=sc.nextInt();
@@ -109,15 +111,15 @@ public class Main {
                     case 3 :
                         System.out.println("Enter id to update book : ");
                         int bookid= sc.nextInt();
-
+                        sc.nextLine();
                         System.out.println("Enter new book title : ");
-                        String Newtitle=sc.next();
+                        String Newtitle=sc.nextLine();
 
                         System.out.println("Enter new quantity : ");
                         int Newquantity=sc.nextInt();
-
+                        sc.nextLine();
                         System.out.println("Enter new ISBN : ");
-                        String Newisbn=sc.next();
+                        String Newisbn=sc.nextLine();
 
 
                         //authorObject.showAuthor();
@@ -132,6 +134,14 @@ public class Main {
                         System.out.println("Enter the id to delete book :");
                         int deletid= sc.nextInt();
                         bookObject.deleteBook(deletid);
+
+                    case 5:
+                        System.out.println("Enter book title or the Author name : ");
+                        sc.nextLine();
+                        String searchBy = sc.nextLine();
+
+                        bookObject.searchBook(searchBy);
+                        break;
                     case 6:
                         System.out.println("Thank youu for using my app");
                         System.exit(0);
