@@ -8,4 +8,10 @@ public interface bookInterface {
     public void deleteBook(int id);
 
     public void searchBook(String searchBy);
+
+    public void showBooksIsbn();
+
+    public void borrowBook(String isbn);
+
+    public void userInfo(String name, String phone, String cin);
 }

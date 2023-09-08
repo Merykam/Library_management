@@ -28,7 +28,8 @@ public class Main {
                         "2.Show all books\n" +
                         "3.Update book\n" +
                         "4.Delete book\n"+
-                        "5.Search book");
+                        "5.Search book\n"+
+                        "6.Borrow book");
                 System.out.println("Enter choice : ");
 
                 int choice=sc.nextInt();
@@ -142,7 +143,21 @@ public class Main {
 
                         bookObject.searchBook(searchBy);
                         break;
-                    case 6:
+
+                    case 6 :
+
+                        bookObject.showBooksIsbn();
+
+                        System.out.println("Enter book ISBN : ");
+
+                        sc.nextLine();
+
+                        bookObject.borrowBook(sc.nextLine());
+
+
+
+                        break;
+                    case 7:
                         System.out.println("Thank youu for using my app");
                         System.exit(0);
 

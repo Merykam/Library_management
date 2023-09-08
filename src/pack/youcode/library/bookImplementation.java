@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class bookImplementation implements bookInterface {
 
     Connection con;
+    Scanner sc = new Scanner(System.in);
 
 
     @Override
@@ -141,5 +143,127 @@ public class bookImplementation implements bookInterface {
             ex.printStackTrace();
         }
     }
+
+    public void userInfo(String name, String phone, String cin){
+
+
+
+
+
+
+
+
+
+
+    }
+    public void info() {
+        System.out.println("Enter your name : ");
+        String name = sc.nextLine();
+
+        System.out.println("Enter your phone number : ");
+        String phone = sc.nextLine();
+
+        System.out.println("Enter your CIN : ");
+        String cin = sc.nextLine();
+
+
+
+       // userInfo(name,phone,cin);
+
+        User user1 = new User(name, phone, cin);
+
+
+        userIn user = new userImplimentation();
+
+        user.addUser(user1);
+
+    }
+
+    public void borrowBook(String isbnforBorrow){
+        con = DatabaseConnection.createDBConnection();
+        String query="select isbn from books";
+
+        try{
+            Statement stmt = con.createStatement();
+            ResultSet result = stmt.executeQuery(query);
+
+
+
+
+            // Loop through the ResultSet to access and display isbn values
+            while (result.next()) {
+                String isbn = result.getString("isbn");
+                //System.out.println("ISBN: " + isbn);
+
+                if(isbn.equals(isbnforBorrow)){
+
+                    info();
+
+                }else{
+                    System.out.println("No book available with this ISBN");
+                    break;
+                }
+
+
+            }
+
+            // Close the ResultSet and Statement when done
+            result.close();
+            stmt.close();
+            con.close();
+
+
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+
+
+        }
+
+
+
+
+
+    };
+
+
+    public void showBooksIsbn(){
+
+
+        con = DatabaseConnection.createDBConnection();
+        String query="select isbn, title from books";
+
+        try{
+            Statement stmt = con.createStatement();
+            ResultSet result = stmt.executeQuery(query);
+
+
+
+
+            // Loop through the ResultSet to access and display isbn values
+            while (result.next()) {
+                String isbn = result.getString("isbn");
+                String name = result.getString("title");
+                System.out.println("ISBN: " + isbn + "\n Book title :" + name);
+
+
+            }
+
+
+
+
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+
+
+        }
+
+
+
+    }
+
 
 }
