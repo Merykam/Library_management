@@ -5,37 +5,63 @@ import java.time.LocalDate;
 public class borrowedBooks {
 
 
-
-    private User user;
-    private Book book;
+    private int user_id;
+    private int book_id;
+    //private User user;
+    //private Book book;
     private LocalDate borrow_date;
     private LocalDate return_date;
-    private String status;
+    //private String status;
 
-    public borrowedBooks(User user, Book book, LocalDate borrow_date, LocalDate return_date, String status) {
 
-        this.user = user;
-        this.book = book;
-        this.borrow_date = borrow_date;
-        this.return_date = return_date;
-        this.status = status;
+    //public User getUser() {
+       // return user;
+    //}
 
+    //public void setUser(User user) {
+       // this.user = user;
+    //}
+
+    //public void setBook(Book book) {
+        //this.book = book;
+    //}
+
+    //public Book getBook() {
+        //return book;
+    //}
+
+    enum Statut {
+        RETURNED,
+        LOST,
+        BORROWED
     }
 
-    public User getUser() {
-        return user;
+    private Statut statut;
+
+    //public borrowedBooks(int user_id, int book_id, LocalDate borrow_date, LocalDate return_date, String status) {
+
+        //this.user_id = user_id;
+        //this.book_id = book_id;
+        //this.borrow_date = borrow_date;
+        //this.return_date = return_date;
+        //this.status = status;
+
+    //}
+
+    public int getUser() {
+        return user_id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+   public void setUser(int user_id) {
+       this.user_id = user_id;
+   }
+
+    public int getBook() {
+        return book_id;
     }
 
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBook(int book_id) {
+        this.book_id = book_id;
     }
 
     public LocalDate getBorrow_date() {
@@ -54,11 +80,11 @@ public class borrowedBooks {
         this.return_date = return_date;
     }
 
-    public String getStatus() {
-        return status;
+    public Statut getStatus() {
+        return statut;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(Statut statut) {
+        this.statut = statut;
     }
 }

@@ -1,9 +1,6 @@
 package pack.youcode.library;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class bookImplementation implements bookInterface {
@@ -179,53 +176,64 @@ public class bookImplementation implements bookInterface {
 
     }
 
-    public void borrowBook(String isbnforBorrow){
+    public void borrowBook(String isbnforBorrow) {
         con = DatabaseConnection.createDBConnection();
-        String query="select isbn from books";
+        String query = "SELECT isbn FROM books";
 
-        try{
+        try {
             Statement stmt = con.createStatement();
             ResultSet result = stmt.executeQuery(query);
 
+            boolean bookFound = false; // Flag to track if the book is found
 
-
-
-            // Loop through the ResultSet to access and display isbn values
+            // Loop through the ResultSet to access and display ISBN values
             while (result.next()) {
                 String isbn = result.getString("isbn");
-                //System.out.println("ISBN: " + isbn);
 
-                if(isbn.equals(isbnforBorrow)){
+                if (isbn.equals(isbnforBorrow)) {
+                    bookFound = true; // Set the flag to true if the book is found
 
                     info();
 
-                }else{
-                    System.out.println("No book available with this ISBN");
-                    break;
+                    String sql = "SELECT books.id FROM books WHERE isbn = ?";
+                    PreparedStatement pstm2 = con.prepareStatement(sql);
+                    pstm2.setString(1, isbn);
+                    ResultSet result2 = pstm2.executeQuery(); // Execute the prepared statement
+
+                    while (result2.next()) {
+                        int idOfBorrowedISBN = result2.getInt("id");
+                        System.out.println(idOfBorrowedISBN);
+
+                        borrowedBooks Bbook = new borrowedBooks();
+                        Bbook.setBook(idOfBorrowedISBN);
+
+                        borrowedBooksInterface addbook =  new borrowBooksImplimentation();
+
+                        addbook.addBorrowedBooks(Bbook);
+                    }
+
+                    // You may choose to break here if you want to stop searching after finding the book
                 }
-
-
             }
 
-            // Close the ResultSet and Statement when done
-            result.close();
-            stmt.close();
-            con.close();
+            // Check if the book was not found in the loop
+            if (!bookFound) {
+                System.out.println("No book available with this ISBN");
+            }
 
-
-
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-
-
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
 
+        //idOfBorrowedISBN
 
 
 
-    };
+
+
+    }
+
 
 
     public void showBooksIsbn(){

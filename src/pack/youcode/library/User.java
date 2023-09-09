@@ -6,6 +6,14 @@ public class User {
     private String phone;
     private String cin;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public User(String name, String phone, String cin) {
         this.name = name;
         this.phone = phone;
