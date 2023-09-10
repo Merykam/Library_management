@@ -1,5 +1,6 @@
 package pack.youcode.library;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class borrowedBooks {
@@ -7,10 +8,42 @@ public class borrowedBooks {
 
     private int user_id;
     private int book_id;
-    //private User user;
-    //private Book book;
-    private LocalDate borrow_date;
-    private LocalDate return_date;
+    private User user;
+
+
+
+    private Book book;
+    private Date borrow_date;
+    private java.util.Date return_date;
+
+    enum Statut {
+        RETURNED,
+        LOST,
+        BORROWED
+    }
+    private Statut statut;
+
+
+    public Date getBorrow_date() {
+        return borrow_date;
+    }
+    public void setBorrow_date(java.util.Date borrow_date) {
+        this.borrow_date = (Date) borrow_date;
+    }
+
+
+    public Date getReturn_date() {
+        return (Date) return_date;
+    }
+
+    public void setReturn_date(java.util.Date return_date) {
+        this.return_date = return_date;
+    }
+
+
+
+
+
     //private String status;
 
 
@@ -30,13 +63,9 @@ public class borrowedBooks {
         //return book;
     //}
 
-    enum Statut {
-        RETURNED,
-        LOST,
-        BORROWED
-    }
 
-    private Statut statut;
+
+
 
     //public borrowedBooks(int user_id, int book_id, LocalDate borrow_date, LocalDate return_date, String status) {
 
@@ -64,21 +93,10 @@ public class borrowedBooks {
         this.book_id = book_id;
     }
 
-    public LocalDate getBorrow_date() {
-        return borrow_date;
-    }
 
-    public void setBorrow_date(LocalDate borrow_date) {
-        this.borrow_date = borrow_date;
-    }
 
-    public LocalDate getReturn_date() {
-        return return_date;
-    }
 
-    public void setReturn_date(LocalDate return_date) {
-        this.return_date = return_date;
-    }
+
 
     public Statut getStatus() {
         return statut;

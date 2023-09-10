@@ -3,12 +3,14 @@ package pack.youcode.library;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class userImplimentation implements userIn{
 
     Connection con;
     @Override
-    public int addUser(User user) {
+    public int addUser(User user, int idOfBorrowedISBN, Date Bdate, Date Rdate) {
         con = DatabaseConnection.createDBConnection();
         String query = "INSERT INTO users (name, phone_number, CIN) VALUES (?,?,?)";
 
@@ -28,13 +30,17 @@ public class userImplimentation implements userIn{
 
                     borrowedBooks Bbook = new borrowedBooks();
                     Bbook.setUser(userId);
+                    Bbook.setBook(idOfBorrowedISBN);
+                    Bbook.setBorrow_date(Bdate);
+                    Bbook.setReturn_date(Rdate);
+
 
 
                     borrowedBooksInterface addbook =  new borrowBooksImplimentation();
 
                     addbook.addBorrowedBooks(Bbook);
 
-                    return userId;
+                   // return userId;
 
 
                 }
@@ -43,7 +49,7 @@ public class userImplimentation implements userIn{
             ex.printStackTrace();
         }
 
-        return -1; // Return -1 to indicate an error (you can choose a different approach if needed)
+        return -1; // Return -1 to indicate an error
     }
 
 

@@ -2,6 +2,7 @@ package pack.youcode.library;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Date;
 
 public class borrowBooksImplimentation implements borrowedBooksInterface{
 
@@ -18,10 +19,10 @@ public class borrowBooksImplimentation implements borrowedBooksInterface{
             PreparedStatement pstm = con.prepareStatement(query);
             pstm.setInt(1,borrowedBook.getUser());
             pstm.setInt(2,borrowedBook.getBook());
-            java.sql.Date date = java.sql.Date.valueOf("2001-04-20"); // Date in "yyyy-MM-dd" format
-            pstm.setDate(3, date);
-            java.sql.Date date2 = java.sql.Date.valueOf("2001-04-25"); // Date in "yyyy-MM-dd" format
-            pstm.setDate(4, date2);
+            //java.sql.Date date = java.sql.Date.valueOf("2001-04-20"); // Date in "yyyy-MM-dd" format
+            pstm.setDate(3, borrowedBook.getBorrow_date());
+            //java.sql.Date date2 = java.sql.Date.valueOf("2001-04-25"); // Date in "yyyy-MM-dd" format
+            pstm.setDate(4, borrowedBook.getReturn_date());
             String status = "borrowed"; // Replace with the appropriate status value
             pstm.setString(5, status);
             int count = pstm.executeUpdate();

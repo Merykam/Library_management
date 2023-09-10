@@ -1,6 +1,10 @@
 package pack.youcode.library;
 
 import java.sql.*;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+
+import java.util.Date;
 import java.util.Scanner;
 
 public class bookImplementation implements bookInterface {
@@ -153,7 +157,7 @@ public class bookImplementation implements bookInterface {
 
 
     }
-    public void info() {
+    public void info(int idOfBorrowedISBN) {
         System.out.println("Enter your name : ");
         String name = sc.nextLine();
 
@@ -163,16 +167,38 @@ public class bookImplementation implements bookInterface {
         System.out.println("Enter your CIN : ");
         String cin = sc.nextLine();
 
+        System.out.println("Enter borrow date (yyyy-MM-dd): ");
+        String Bdate = sc.nextLine();
+
+// Parse the input string into a LocalDate
+        LocalDate borrowLocalDate = LocalDate.parse(Bdate);
+
+// Convert the LocalDate to a java.util.Date
+        java.util.Date borrowDate = java.sql.Date.valueOf(borrowLocalDate);
+
+        System.out.println("Enter return date (yyyy-MM-dd): ");
+        String Rdate = sc.nextLine();
+
+// Parse the input string into a LocalDate
+        LocalDate returnLocalDate = LocalDate.parse(Rdate);
+
+// Convert the LocalDate to a java.util.Date
+        java.util.Date returnDate = java.sql.Date.valueOf(returnLocalDate);
+
+// Now, you can use borrowDate and returnDate as java.util.Date objects
 
 
-       // userInfo(name,phone,cin);
+
+
+
+        // userInfo(name,phone,cin);
 
         User user1 = new User(name, phone, cin);
 
 
         userIn user = new userImplimentation();
 
-        user.addUser(user1);
+        user.addUser(user1,idOfBorrowedISBN,borrowDate,returnDate);
 
     }
 
@@ -193,7 +219,7 @@ public class bookImplementation implements bookInterface {
                 if (isbn.equals(isbnforBorrow)) {
                     bookFound = true; // Set the flag to true if the book is found
 
-                    info();
+                   // info();
 
                     String sql = "SELECT books.id FROM books WHERE isbn = ?";
                     PreparedStatement pstm2 = con.prepareStatement(sql);
@@ -204,12 +230,17 @@ public class bookImplementation implements bookInterface {
                         int idOfBorrowedISBN = result2.getInt("id");
                         System.out.println(idOfBorrowedISBN);
 
-                        borrowedBooks Bbook = new borrowedBooks();
-                        Bbook.setBook(idOfBorrowedISBN);
 
-                        borrowedBooksInterface addbook =  new borrowBooksImplimentation();
+                        info(idOfBorrowedISBN);
 
-                        addbook.addBorrowedBooks(Bbook);
+                        //borrowedBooks Bbook = new borrowedBooks();
+                        //Bbook.setBook(idOfBorrowedISBN);
+
+                        //borrowedBooksInterface addbook =  new borrowBooksImplimentation();
+
+                        //addbook.addBorrowedBooks(Bbook);
+
+
                     }
 
                     // You may choose to break here if you want to stop searching after finding the book
