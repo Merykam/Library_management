@@ -376,6 +376,64 @@ public class bookImplementation implements bookInterface {
         }
 
 
+
+
+
+    }
+
+
+    public void statistics(){
+
+        con = DatabaseConnection.createDBConnection();
+
+        String query = "SELECT books.title  as bookTitle , users.name as userName FROM books \n" +
+                "INNER JOIN `borrowed_books` on books.id=`borrowed_books`.`book_id`\n" +
+                "INNER JOIN users on users.id=`borrowed_books`.`user_id`  WHERE status=\"borrowed\"";
+
+
+        String query2 = "SELECT books.title  as bookTitle , users.name as userName FROM books \n" +
+                "INNER JOIN `borrowed_books` on books.id=`borrowed_books`.`book_id`\n" +
+                "INNER JOIN users on users.id=`borrowed_books`.`user_id`  WHERE status=\"returned\"";
+
+        try {
+            PreparedStatement pstm = con.prepareStatement(query);
+            ResultSet result=pstm.executeQuery();
+
+
+
+            PreparedStatement pstm2 = con.prepareStatement(query2);
+            ResultSet result2=pstm2.executeQuery();
+
+            while (result.next()){
+
+                System.out.println("Les livre empruntés :\n");
+                System.out.println("Title--------------Emprunteur");
+                System.out.println(result.getString("bookTitle") +"--------------------"+ result.getString("userName"));
+                //System.out.format("%s %s", result.getString("bookTitle"), result.getString("userName"));
+
+
+            }
+
+            while (result2.next()){
+
+                System.out.println("Les livre rendus :\n");
+                System.out.println("Title--------------Emprunteur");
+                System.out.println(result2.getString("bookTitle") +"--------------------"+ result2.getString("userName"));
+                //System.out.format("%s %s", result2.getString("bookTitle"), result2.getString("userName"));
+
+            }
+
+
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+
     }
 
 

@@ -30,7 +30,8 @@ public class Main {
                         "4.Delete book\n"+
                         "5.Search book\n"+
                         "6.Borrow book\n"+
-                        "7.Return book");
+                        "7.Return book\n"+
+                        "8-Afficher les statistiques");
                 System.out.println("Enter choice : ");
 
                 int choice=sc.nextInt();
@@ -168,8 +169,11 @@ public class Main {
 
 
                         break;
-
                     case 8:
+                        bookObject.statistics();
+                        break;
+
+                    case 9:
                         System.out.println("Thank youu for using my app");
                         System.exit(0);
 
