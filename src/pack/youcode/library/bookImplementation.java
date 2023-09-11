@@ -233,12 +233,7 @@ public class bookImplementation implements bookInterface {
 
                         info(idOfBorrowedISBN);
 
-                        //borrowedBooks Bbook = new borrowedBooks();
-                        //Bbook.setBook(idOfBorrowedISBN);
 
-                        //borrowedBooksInterface addbook =  new borrowBooksImplimentation();
-
-                        //addbook.addBorrowedBooks(Bbook);
 
 
                     }
@@ -300,6 +295,85 @@ public class bookImplementation implements bookInterface {
 
         }
 
+
+
+    }
+
+
+    public void returnBook(String returnedIsbn){
+
+        con = DatabaseConnection.createDBConnection();
+        String query = "SELECT books.isbn as isbn1 ,`borrowed_books`.status FROM `books` INNER JOIN `borrowed_books` ON books.id=`borrowed_books`.`book_id`;";
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet result = stmt.executeQuery(query);
+
+            boolean bookFound = false; // Flag to track if the book is found
+
+            // Loop through the ResultSet to access and display ISBN values
+            while (result.next()) {
+                String isbn = result.getString("isbn1");
+                String status = result.getString("status");
+
+                if (isbn.equals(returnedIsbn)) {
+                    bookFound = true; // Set the flag to true if the book is found
+                    if (status.equals("borrowed") || status.equals("lost")){
+
+                        //String query2 = "UPDATE `borrowed_books` SET status=? where isbn=?";
+                        String query2 = "UPDATE `borrowed_books` as bb " +
+                                "INNER JOIN `books` as b ON bb.book_id = b.id " +
+                                "SET bb.status = ? " +
+                                "WHERE b.isbn = ?";
+                        try {
+
+                            PreparedStatement pstm2 = con.prepareStatement(query2);
+                            pstm2.setString(1, "returned");
+                            pstm2.setString(2, returnedIsbn);
+                            int count = pstm2.executeUpdate();
+                            if (count != 0) {
+                                System.out.println("status mis à jour avec succès");
+                            } else {
+                                System.out.println("Échec de la mise à jour du status. ");
+                            }
+                        }catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+
+
+
+
+
+                        System.out.println("Returned successfully");
+                        System.out.println("returnedIsbn :"+returnedIsbn);
+                        System.out.println("isbn in db :"+isbn);
+                        break;
+
+
+                    }else if(status.equals("returned")){
+                        System.out.println("This book is already returned");
+                        break;
+                    }
+
+
+
+                    // You may choose to break here if you want to stop searching after finding the book
+                }else{
+                    System.out.println("This book is not in borrowed");
+                    break;
+                }
+            }
+
+            // Check if the book was not found in the loop
+            if (!bookFound) {
+                System.out.println("No book available with this ISBN");
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }

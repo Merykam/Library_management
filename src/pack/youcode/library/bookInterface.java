@@ -13,5 +13,7 @@ public interface bookInterface {
 
     public void borrowBook(String isbn);
 
+    public void returnBook(String isbnReturned);
+
     public void userInfo(String name, String phone, String cin);
 }
