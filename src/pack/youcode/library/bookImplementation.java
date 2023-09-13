@@ -4,7 +4,9 @@ import java.sql.*;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class bookImplementation implements bookInterface {
@@ -16,12 +18,23 @@ public class bookImplementation implements bookInterface {
     @Override
     public void addBook(Book book) {
 
+        // Validate book data before inserting into the database
+        if (!isValidBookData(book)) {
+            System.out.println("Invalid book data. Book not inserted.");
+            return;
+        }
+
          con=DatabaseConnection.createDBConnection();
         String query = "INSERT INTO books (title, quantity, disponible, isbn, author) VALUES (?,?,?,?,?)";
 
+
+
+
         try{
 
+
             PreparedStatement pstm = con.prepareStatement(query);
+
             pstm.setString(1,book.getTitle());
             pstm.setInt(2,book.getQuantity());
             pstm.setInt(3,book.getAvailable());
@@ -38,6 +51,38 @@ public class bookImplementation implements bookInterface {
         }
 
 
+
+    }
+
+
+
+
+    private boolean isValidBookData(Book book) {
+        // Implement your validation rules here
+        // For example, you can check if the title is not empty, quantity is positive, etc.
+        if (book.getTitle() == null || book.getTitle().isEmpty()) {
+            System.out.println("Invalid title");
+            return false;
+        }
+
+        if (book.getIsbn() == null || book.getIsbn().isEmpty()) {
+            System.out.println("Invalid ISBN");
+            return false;
+        }
+        if (book.getAuthor() == null || book.getAuthor().isEmpty()) {
+            System.out.println("Invalid Author");
+            return false;
+        }
+
+        if (book.getQuantity() <= 0) {
+            System.out.println("Invalid quantity");
+            return false;
+        }
+
+        // Add more validation rules as needed
+
+        // If all validation checks pass, return true
+        return true;
     }
 
     @Override
@@ -48,10 +93,21 @@ public class bookImplementation implements bookInterface {
         try {
             Statement stmt = con.createStatement();
             ResultSet result = stmt.executeQuery(query);
+
+
+            System.out.println("Title          Quantity     Available books   ISBN         Author");
             while (result.next()) {
-                System.out.format("%s %d %d %s %s%n", result.getString(1), result.getInt(2), result.getInt(3), result.getString(4), result.getString(5));
-                //                ^^                  ^^                  ^^
-                // Utilisez %s pour les chaînes de caractères et %d pour les entiers
+                String title = result.getString(1);
+                int quantity = result.getInt(2);
+                int available = result.getInt(3);
+                String isbn = result.getString(4);
+                String author = result.getString(5);
+
+                // Use String.format to format each column with a specific width
+                String formattedLine = String.format("%-15s %-12d %-18d %-12s %-15s",
+                        title, quantity, available, isbn, author);
+
+                System.out.println(formattedLine);
             }
 
             // Assurez-vous de fermer le ResultSet, le Statement et la connexion lorsque vous avez terminé.
@@ -68,49 +124,82 @@ public class bookImplementation implements bookInterface {
 
 
     @Override
-    public void updateBook(int bookId, String newTitle, int newQuantity, int newAvailable, String newIsbn, String newAuthor) {
-
+    public void updateBook(String ISBN, String newTitle, Integer newQuantity, Integer newAvailable, String newAuthor) {
         con = DatabaseConnection.createDBConnection();
-        String query = "UPDATE books SET title=?, quantity=?, disponible=?, isbn=?, author=? WHERE id=?";
+
+        StringBuilder queryBuilder = new StringBuilder("UPDATE books SET");
+        List<Object> parameters = new ArrayList<>();
+
+        if (!newTitle.isEmpty()) {
+            queryBuilder.append(" title=?,");
+            parameters.add(newTitle);
+        }
+
+        if (newQuantity != 0) {
+            queryBuilder.append(" quantity=?,");
+            parameters.add(newQuantity);
+        }
+
+        if (newAvailable != 0) {
+            queryBuilder.append(" disponible=?,");
+            parameters.add(newAvailable);
+        }
+
+        if (!newAuthor.isEmpty()) {
+            queryBuilder.append(" author=?,");
+            parameters.add(newAuthor);
+        }
+
+        // Remove the trailing comma
+        queryBuilder.deleteCharAt(queryBuilder.length() - 1);
+
+        queryBuilder.append(" WHERE isbn=?");
+        parameters.add(ISBN);
+
+        String query = queryBuilder.toString();
 
         try {
             PreparedStatement pstm = con.prepareStatement(query);
-            pstm.setString(1, newTitle);
-            pstm.setInt(2, newQuantity);
-            pstm.setInt(3, newAvailable);
-            pstm.setString(4, newIsbn);
-            pstm.setString(5, newAuthor);
-            pstm.setInt(6, bookId); // Spécifiez l'ID du livre que vous souhaitez mettre à jour
+
+            // Set the parameter values
+            for (int i = 0; i < parameters.size(); i++) {
+                Object parameter = parameters.get(i);
+                pstm.setObject(i + 1, parameter);
+            }
 
             int count = pstm.executeUpdate();
             if (count != 0) {
                 System.out.println("Livre mis à jour avec succès");
             } else {
-                System.out.println("Échec de la mise à jour du livre. Le livre avec l'ID " + bookId + " n'a pas été trouvé.");
+                System.out.println("Échec de la mise à jour du livre. Le livre avec Isbn " + ISBN + " n'a pas été trouvé.");
             }
 
-            // Assurez-vous de fermer le PreparedStatement et la connexion lorsque vous avez terminé.
+            // Make sure to close the PreparedStatement and the connection when you're done.
             pstm.close();
             con.close();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     @Override
-    public void deleteBook(int id) {
+    public void deleteBook(String deletBook) {
         con = DatabaseConnection.createDBConnection();
-        String query = "delete from books where id=?";
+
+        String query = "delete from books where isbn=?";
         try{
             PreparedStatement pstm = con.prepareStatement(query);
-            pstm.setInt(1,id);
+            pstm.setString(1,deletBook);
 
             int count = pstm.executeUpdate();
             if(count != 0){
                 System.out.println("book deleted successfully");
+            }else{
+                System.out.println("This book isn't available");
             }
+
+            pstm.close();
+            con.close();
 
         }catch(Exception ex){
             ex.printStackTrace();
@@ -131,11 +220,43 @@ public class bookImplementation implements bookInterface {
 
             ResultSet result = pstm.executeQuery(); // Execute the prepared statement
 
+            boolean found = false; // Flag to check if any records were found
+
+
+
+            //a
+
+
+
+            System.out.println("Title          Quantity     Available books   ISBN         Author");
             while (result.next()) {
-                System.out.format("%s %d %d %s %s%n", result.getString("title"), result.getInt("quantity"), result.getInt("disponible"), result.getString("isbn"), result.getString("author"));
+                String title = result.getString("title");
+                int quantity = result.getInt("quantity");
+                int available = result.getInt("disponible");
+                String isbn = result.getString("isbn");
+                String author = result.getString("author");
+
+                // Use String.format to format each column with a specific width
+                String formattedLine = String.format("%-15s %-12d %-18d %-12s %-15s",
+                        title, quantity, available, isbn, author);
+
+                System.out.println(formattedLine);
+
+
+                found = true;
+
             }
 
-            // Assurez-vous de fermer le ResultSet, le PreparedStatement et la connexion lorsque vous avez terminé.
+
+
+
+
+
+            if (!found) {
+                System.out.println("No books available for the given search criteria.");
+            }
+
+
             result.close();
             pstm.close();
             con.close();
@@ -145,18 +266,8 @@ public class bookImplementation implements bookInterface {
         }
     }
 
-    public void userInfo(String name, String phone, String cin){
 
 
-
-
-
-
-
-
-
-
-    }
     public void info(int idOfBorrowedISBN) {
         System.out.println("Enter your name : ");
         String name = sc.nextLine();
@@ -166,6 +277,10 @@ public class bookImplementation implements bookInterface {
 
         System.out.println("Enter your CIN : ");
         String cin = sc.nextLine();
+
+
+        //System.out.println("Enter member number : ");
+        //String member = sc.nextLine();
 
         System.out.println("Enter borrow date (yyyy-MM-dd): ");
         String Bdate = sc.nextLine();
@@ -212,12 +327,12 @@ public class bookImplementation implements bookInterface {
 
             boolean bookFound = false; // Flag to track if the book is found
 
-            // Loop through the ResultSet to access and display ISBN values
+
             while (result.next()) {
                 String isbn = result.getString("isbn");
 
                 if (isbn.equals(isbnforBorrow)) {
-                    bookFound = true; // Set the flag to true if the book is found
+                    bookFound = true;
 
                    // info();
 
@@ -231,6 +346,11 @@ public class bookImplementation implements bookInterface {
                         System.out.println(idOfBorrowedISBN);
 
 
+                //test
+
+
+
+
                         info(idOfBorrowedISBN);
 
 
@@ -238,11 +358,11 @@ public class bookImplementation implements bookInterface {
 
                     }
 
-                    // You may choose to break here if you want to stop searching after finding the book
+
                 }
             }
 
-            // Check if the book was not found in the loop
+
             if (!bookFound) {
                 System.out.println("No book available with this ISBN");
             }
@@ -275,14 +395,24 @@ public class bookImplementation implements bookInterface {
 
 
 
-            // Loop through the ResultSet to access and display isbn values
+            //
+
+            System.out.println("ISBN----------------TITLE");
             while (result.next()) {
                 String isbn = result.getString("isbn");
                 String name = result.getString("title");
-                System.out.println("ISBN: " + isbn + "\n Book title :" + name);
+
+
+                System.out.println( isbn + "----------------" + name);
 
 
             }
+            //
+
+
+
+
+
 
 
 
@@ -298,38 +428,73 @@ public class bookImplementation implements bookInterface {
 
 
     }
+// GC
 
-
-    public void returnBook(String returnedIsbn){
-
+    public void returnBook(String returnedIsbn, String CIN){
         con = DatabaseConnection.createDBConnection();
-        String query = "SELECT books.isbn as isbn1 ,`borrowed_books`.status FROM `books` INNER JOIN `borrowed_books` ON books.id=`borrowed_books`.`book_id`;";
+       // String query = "SELECT books.isbn as isbn1 ,`borrowed_books`.status FROM `books` INNER JOIN `borrowed_books` ON books.id=`borrowed_books`.`book_id`;";
+       /* String query = """
+            SELECT b.isbn AS isbn1, u.CIN AS cin, bb.status AS status 
+                            FROM books AS b 
+                            INNER JOIN borrowed_books AS bb ON b.id = bb.book_id 
+                            INNER JOIN users AS u ON u.id = bb.user_id 
+                            WHERE b.isbn = ? AND u.CIN = ?;
+            """;*/
 
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet result = stmt.executeQuery(query);
+        String query = """
+            SELECT books.isbn AS isbn1, users.CIN AS cin, borrowed_books.status AS status 
+                            FROM books 
+                            INNER JOIN borrowed_books ON books.id = borrowed_books.book_id 
+                            INNER JOIN users  ON users.id = borrowed_books.user_id 
+                            WHERE books.isbn = ? AND users.CIN = ?;
+            """;
 
-            boolean bookFound = false; // Flag to track if the book is found
+        String isbn = "";
+        String cin = "";
+        String status = "";
+        boolean bookFound = false;
+        try(PreparedStatement pstm = con.prepareStatement(query);){
+            //Statement stmt = con.createStatement();
+            pstm.setString(1, returnedIsbn);
+            pstm.setString(2, CIN);
+            ResultSet result = pstm.executeQuery();
 
-            // Loop through the ResultSet to access and display ISBN values
+
             while (result.next()) {
-                String isbn = result.getString("isbn1");
-                String status = result.getString("status");
+                System.out.println("while loop");
+                isbn = result.getString("isbn1");
+                cin = result.getString("cin");
+                status = result.getString("status");
+                System.out.println(isbn + "   " + cin + "   " + status);
+            }
+            result.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-                if (isbn.equals(returnedIsbn)) {
+
+                if (isbn.equals(returnedIsbn) && cin.equals(CIN)){
                     bookFound = true; // Set the flag to true if the book is found
                     if (status.equals("borrowed") || status.equals("lost")){
 
                         //String query2 = "UPDATE `borrowed_books` SET status=? where isbn=?";
-                        String query2 = "UPDATE `borrowed_books` as bb " +
-                                "INNER JOIN `books` as b ON bb.book_id = b.id " +
-                                "SET bb.status = ? " +
-                                "WHERE b.isbn = ?";
-                        try {
+                        //String query2 = "UPDATE `borrowed_books` as bb " +
+                              //  "INNER JOIN `books` as b ON bb.book_id = b.id " +
+                                //"SET bb.status = ? " +
+                                //"WHERE b.isbn = ?";
 
-                            PreparedStatement pstm2 = con.prepareStatement(query2);
+
+                        String query2 = """
+                                UPDATE `borrowed_books` AS bb  
+                                INNER JOIN `books` AS b ON bb.book_id = b.id 
+                                INNER JOIN `users` ON users.id = bb.user_id 
+                                SET bb.status = ? 
+                                WHERE b.isbn = ? AND users.CIN = ? ;
+                                """;
+                        try (PreparedStatement pstm2 = con.prepareStatement(query2);){
                             pstm2.setString(1, "returned");
                             pstm2.setString(2, returnedIsbn);
+                            pstm2.setString(3, CIN);
                             int count = pstm2.executeUpdate();
                             if (count != 0) {
                                 System.out.println("status mis à jour avec succès");
@@ -340,45 +505,25 @@ public class bookImplementation implements bookInterface {
                             e.printStackTrace();
                         }
 
-
-
-
-
-
                         System.out.println("Returned successfully");
                         System.out.println("returnedIsbn :"+returnedIsbn);
                         System.out.println("isbn in db :"+isbn);
-                        break;
 
 
-                    }else if(status.equals("returned")){
-                        System.out.println("This book is already returned");
-                        break;
+
                     }
+                    else if(status.equals("returned")){
+                        System.out.println("This book is already returned");
 
+                    }else{
+                        System.out.println("This book is not in borrowed");
 
-
-                    // You may choose to break here if you want to stop searching after finding the book
-                }else{
-                    System.out.println("This book is not in borrowed");
-                    break;
+                    }
                 }
-            }
+                else {
+                    System.out.println("No book available with this ISBN");
 
-            // Check if the book was not found in the loop
-            if (!bookFound) {
-                System.out.println("No book available with this ISBN");
-
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
+                }
     }
 
 
@@ -404,20 +549,27 @@ public class bookImplementation implements bookInterface {
             PreparedStatement pstm2 = con.prepareStatement(query2);
             ResultSet result2=pstm2.executeQuery();
 
+
+            System.out.println("Les livre empruntés :\n");
+            System.out.println("Title--------------Emprunteur");
+
             while (result.next()){
 
-                System.out.println("Les livre empruntés :\n");
-                System.out.println("Title--------------Emprunteur");
+
+
                 System.out.println(result.getString("bookTitle") +"--------------------"+ result.getString("userName"));
                 //System.out.format("%s %s", result.getString("bookTitle"), result.getString("userName"));
 
 
             }
 
+            System.out.println("Les livre rendus :\n");
+            System.out.println("Title--------------Emprunteur");
+
             while (result2.next()){
 
-                System.out.println("Les livre rendus :\n");
-                System.out.println("Title--------------Emprunteur");
+
+
                 System.out.println(result2.getString("bookTitle") +"--------------------"+ result2.getString("userName"));
                 //System.out.format("%s %s", result2.getString("bookTitle"), result2.getString("userName"));
 

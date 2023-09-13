@@ -3,6 +3,7 @@ package pack.youcode.library;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -12,6 +13,26 @@ public class userImplimentation implements userIn{
     @Override
     public int addUser(User user, int idOfBorrowedISBN, Date Bdate, Date Rdate) {
         con = DatabaseConnection.createDBConnection();
+
+
+        //String query2= "SELECT CIN FROM users";
+
+
+       // try {
+           // Statement stmt = con.createStatement();
+           // ResultSet result2 = stmt.executeQuery(query2);
+
+            //while (result2.next()){
+              // String Cin = result2.getString(1);
+                //if(Cin.equals())
+            //}
+        //}catch (Exception ex) {
+           // ex.printStackTrace();
+       // }
+
+
+
+
         String query = "INSERT INTO users (name, phone_number, CIN) VALUES (?,?,?)";
 
         try {

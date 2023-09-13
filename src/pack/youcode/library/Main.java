@@ -37,35 +37,7 @@ public class Main {
                 int choice=sc.nextInt();
 
                 switch (choice){
-                   // case 0:
-                        //Book book = new Book();
 
-                        //get author name from the user
-                        //System.out.println("Enter author name : ");
-                        //String author=sc.next();
-
-                        //create object from Author class
-                       // Author author1 = new Author(author);
-
-                        //set name to object
-                        //author1.setName(author);
-
-                        //arg
-                        //authorObject.addAuthor(author1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-                       // break;
 
                     case 1:
                         //Book book = new Book();
@@ -95,48 +67,58 @@ public class Main {
                         bookObject.addBook(book1);
 
 
-
-
-
-
-
-
-
-
-
-
-
                         break;
 
                     case 2 :
                         bookObject.showBooks();
                         break;
                     case 3 :
-                        System.out.println("Enter id to update book : ");
-                        int bookid= sc.nextInt();
+                        System.out.println("Enter ISBN to update book : ");
                         sc.nextLine();
+                        String ISBN= sc.nextLine();
+
+
                         System.out.println("Enter new book title : ");
                         String Newtitle=sc.nextLine();
 
                         System.out.println("Enter new quantity : ");
-                        int Newquantity=sc.nextInt();
-                        sc.nextLine();
-                        System.out.println("Enter new ISBN : ");
-                        String Newisbn=sc.nextLine();
+                        String sQuantity = sc.nextLine();
+                        int Newquantity = 0;
+                        if(!sQuantity.isEmpty()){
+                            Newquantity = Integer.parseInt(sQuantity);
+                        }
+
+
+
+                        //sc.nextLine();
+
 
 
                         //authorObject.showAuthor();
                         System.out.println("Enter new author name: ");
-                        String Newauthorname=sc.next();
+                        String Newauthorname=sc.nextLine();
 
 
-                        bookObject.updateBook(bookid,Newtitle,Newquantity,Newquantity,Newisbn,Newauthorname);
+                        bookObject.updateBook(ISBN,Newtitle,Newquantity,Newquantity,Newauthorname);
 
                         break;
                     case 4:
-                        System.out.println("Enter the id to delete book :");
-                        int deletid= sc.nextInt();
-                        bookObject.deleteBook(deletid);
+
+
+// Create a Scanner object to read user input
+                        Scanner sc2 = new Scanner(System.in);
+
+                        System.out.println("Enter the ISBN to delete book:");
+                        String isbnToDelete = sc2.nextLine();
+
+
+                        bookObject.deleteBook(isbnToDelete);
+
+
+
+
+
+                        break;
 
                     case 5:
                         System.out.println("Enter book title or the Author name : ");
@@ -160,12 +142,18 @@ public class Main {
 
                         break;
                     case 7:
+
+                        Scanner sc3 = new Scanner(System.in);
                         System.out.println("Enter ISBN for return :");
-                        sc.nextLine();
-                        String returnedIsbn = sc.nextLine();
+                        //sc3.nextLine();
+                        String returnedIsbn = sc3.nextLine();
+
+                        System.out.println("Enter User CIN for return :");
+                        //sc3.nextLine();
+                        String CIN = sc3.nextLine();
 
 
-                        bookObject.returnBook(returnedIsbn);
+                        bookObject.returnBook(returnedIsbn,CIN);
 
 
                         break;
