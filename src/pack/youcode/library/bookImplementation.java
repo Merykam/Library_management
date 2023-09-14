@@ -43,6 +43,8 @@ public class bookImplementation implements bookInterface {
             int count = pstm.executeUpdate();
             if(count !=0){
                 System.out.println("book inserted successfully");
+
+
             }
 
         }catch (Exception ex){
@@ -300,7 +302,7 @@ public class bookImplementation implements bookInterface {
 // Convert the LocalDate to a java.util.Date
         java.util.Date returnDate = java.sql.Date.valueOf(returnLocalDate);
 
-// Now, you can use borrowDate and returnDate as java.util.Date objects
+
 
 
 
@@ -428,7 +430,7 @@ public class bookImplementation implements bookInterface {
 
 
     }
-// GC
+
 
     public void returnBook(String returnedIsbn, String CIN){
         con = DatabaseConnection.createDBConnection();
